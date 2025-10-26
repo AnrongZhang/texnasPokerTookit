@@ -20,19 +20,19 @@ class Judge:
         input.get_suits_and_weights()
         suits = input.suits
         weights = input.weights
-        hasF, hasS, hasSF, suits_FS, weights_FS = Judge.hasStraightFlush(suits, weights)
+        hasF, hasS, hasSF, suits_FS, weights_FS = Judge.hasStraightFlush(suits.copy(), weights.copy())
         if hasSF:
             cards_list = NumCards.merge_suits_and_weights(suits_FS, weights_FS)
             keepcards.set_cards(cards_list)
             pattern = Pattern(PatternFace.SRIFL, Judge.getPWeightMax(weights_FS))
             return keepcards, pattern
-        hasFK, suits_FK, weights_FK = Judge.hasFK(suits, weights)
+        hasFK, suits_FK, weights_FK = Judge.hasFK(suits.copy(), weights.copy())
         if hasFK:
             cards_list = NumCards.merge_suits_and_weights(suits_FK, weights_FK)
             keepcards.set_cards(cards_list)
             pattern = Pattern(PatternFace.FOURK, Judge.getPWeightFKFH(weights_FK))
             return keepcards, pattern
-        hasFH, hasCS, suits_TH, weights_TH = Judge.hasFHCS(suits, weights)
+        hasFH, hasCS, suits_TH, weights_TH = Judge.hasFHCS(suits.copy(), weights.copy())
         if hasFH:
             cards_list = NumCards.merge_suits_and_weights(suits_TH, weights_TH)
             keepcards.set_cards(cards_list)
@@ -52,8 +52,8 @@ class Judge:
             cards_list = NumCards.merge_suits_and_weights(suits_TH, weights_TH)
             keepcards.set_cards(cards_list)
             pattern = Pattern(PatternFace.THREE, Judge.getPWeightTHREE(weights_TH))
-            return keepcards, pattern            
-        hasTP, hasOP, suits_TO, weights_TO = Judge.hasPair(suits, weights)
+            return keepcards, pattern        
+        hasTP, hasOP, suits_TO, weights_TO = Judge.hasPair(suits.copy(), weights.copy())
         if hasTP:
             cards_list = NumCards.merge_suits_and_weights(suits_TO, weights_TO)
             keepcards.set_cards(cards_list)
@@ -64,7 +64,7 @@ class Judge:
             keepcards.set_cards(cards_list)
             pattern = Pattern(PatternFace.OPAIR, Judge.getPWeghtOPAIR(weights_TO))
             return keepcards, pattern
-        suits_AH, weights_AH = Judge.getAHigh(suits, weights)
+        suits_AH, weights_AH = Judge.getAHigh(suits.copy(), weights.copy())
         cards_list = NumCards.merge_suits_and_weights(suits_AH, weights_AH)
         keepcards.set_cards(cards_list)
         pattern = Pattern(PatternFace.AHIGH, Judge.getPWeightAll(weights_AH))

@@ -7,10 +7,13 @@ import logging
 import time
 
 
-def get_logger():
+def get_logger(record=True):
     timestamp = int(time.time())
     logger = logging.getLogger('texasPoker')
-    logger.setLevel(logging.INFO)
+    if record:
+        logger.setLevel(logging.INFO)
+    else:
+        logger.setLevel(logging.ERROR)
     fh = logging.FileHandler(f'log/test_{timestamp}.log')
     # ff = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     # fh.setFormatter(ff)
@@ -34,13 +37,13 @@ def test_5_cards():
 
 def test_7_cards():
     input_7_cards = Input7Cards()
-    input_7_cards.NCList[0] = Card(CardFace.H8)
-    input_7_cards.NCList[1] = Card(CardFace.CJ)
-    input_7_cards.NCList[2] = Card(CardFace.SQ)
-    input_7_cards.NCList[3] = Card(CardFace.D9)
-    input_7_cards.NCList[4] = Card(CardFace.C7)
-    input_7_cards.NCList[5] = Card(CardFace.ST)
-    input_7_cards.NCList[6] = Card(CardFace.D6)
+    input_7_cards.NCList[0] = Card(CardFace.SK)
+    input_7_cards.NCList[1] = Card(CardFace.D8)
+    input_7_cards.NCList[2] = Card(CardFace.CK)
+    input_7_cards.NCList[3] = Card(CardFace.S7)
+    input_7_cards.NCList[4] = Card(CardFace.H6)
+    input_7_cards.NCList[5] = Card(CardFace.S4)
+    input_7_cards.NCList[6] = Card(CardFace.HT)
     
     keepcards, pattern = Judge.judge_pattern_7(input_7_cards)
     
@@ -111,7 +114,7 @@ def test_2_shareds():
     
     logger = get_logger()
     
-    num_test = 1000
+    num_test = 100000
     num_players = 2
     
     deal = Dealer()
