@@ -116,11 +116,11 @@ class Judge:
     @staticmethod
     def hasStraight(weights):
         hasS = False
-        weights_left = []
         weights_list = [weights]
         if 14 in weights:
             weights_list.append([1 if weight == 14 else weight for weight in weights])
         for weights in weights_list:
+            weights_left = []
             weights.sort()
             for ii in range(len(weights) - 1):
                 dd = weights[ii+1] - weights[ii]

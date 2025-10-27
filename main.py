@@ -37,13 +37,13 @@ def test_5_cards():
 
 def test_7_cards():
     input_7_cards = Input7Cards()
-    input_7_cards.NCList[0] = Card(CardFace.SK)
-    input_7_cards.NCList[1] = Card(CardFace.D8)
-    input_7_cards.NCList[2] = Card(CardFace.CK)
-    input_7_cards.NCList[3] = Card(CardFace.S7)
-    input_7_cards.NCList[4] = Card(CardFace.H6)
-    input_7_cards.NCList[5] = Card(CardFace.S4)
-    input_7_cards.NCList[6] = Card(CardFace.HT)
+    input_7_cards.NCList[0] = Card(CardFace.D3)
+    input_7_cards.NCList[1] = Card(CardFace.H2)
+    input_7_cards.NCList[2] = Card(CardFace.HA)
+    input_7_cards.NCList[3] = Card(CardFace.HK)
+    input_7_cards.NCList[4] = Card(CardFace.D6)
+    input_7_cards.NCList[5] = Card(CardFace.CJ)
+    input_7_cards.NCList[6] = Card(CardFace.SQ)
     
     keepcards, pattern = Judge.judge_pattern_7(input_7_cards)
     
@@ -170,6 +170,80 @@ def test_2_shareds():
         logger.info(f'Player{collector.id} draw_ratio: {collector.draw_str}')
         logger.info('-'*20)
     logger.info('='*20)
+    
+    
+
+def test_52_cards():
+    
+    logger = get_logger()
+    
+    num_players = 10
+    
+    num_test = 6
+    deal = Dealer()
+    players: List[Player] = [Player() for _ in range(num_players)]
+    collectors: List[Collector] = [Collector() for _ in range(num_players)] 
+    handcards = [
+        [Card(CardFace.SA), Card(CardFace.S3)],
+        [Card(CardFace.D3), Card(CardFace.H2)],
+        [Card(CardFace.C4), Card(CardFace.C8)],
+        [Card(CardFace.D8), Card(CardFace.DT)],
+        [Card(CardFace.DA), Card(CardFace.D5)],
+        [Card(CardFace.HJ), Card(CardFace.DJ)],
+        [Card(CardFace.H5), Card(CardFace.S4)],
+        [Card(CardFace.D2), Card(CardFace.SJ)],
+        [Card(CardFace.HQ), Card(CardFace.D9)],
+        [Card(CardFace.H4), Card(CardFace.H9)],
+    ]
+    deal.set_show_cards(sum(handcards, []))
+    
+    logger.info('='*20)
+    for player, handcard in zip(players, handcards):
+        player.set_handcards(handcard)
+        logger.info(f'Player{player.id}: {player.handcards}')
+    logger.info('='*20)
+    
+
+    for ii in mmcv.track_iter_progress(range(num_test)):
+    
+        logger.info(f'GameRound {ii}')
+        sharedcards = deal.deal_sharedcards(num_times=1)[0]
+        deal.set_show_cards(sharedcards)
+        player_sharedcards = Input5Cards()
+        player_sharedcards.set_cards(sharedcards)
+        logger.info(player_sharedcards)
+        logger.info('-'*20)
+        
+        pattern_list = []
+        
+        for player in players:
+            player.set_handshare(sharedcards)
+            player.get_keepcards()
+            pattern_list.append(player.pattern)
+            logger.info(f'Player{player.id}: {player.handshare}')
+            logger.info(f'Player{player.id}: {player.keepcards}')
+            logger.info(f'Player{player.id}: {player.pattern.pattern_face}')
+            logger.info(f'Player{player.id}: {player.pattern.pattern_weight}')
+            logger.info('-'*20)
+        
+        results = Judge.judge_x_players(pattern_list)
+        for collector, result in zip(collectors, results):
+            collector.update(result)
+            logger.info(f'Player{collector.id}: {result.name}')
+        
+        logger.info('\n')
+    
+    logger.info('='*20)
+    for collector in collectors:
+        logger.info(f'Player{collector.id} wins: {collector.wins}')
+        logger.info(f'Player{collector.id} lose: {collector.lose}')
+        logger.info(f'Player{collector.id} draw: {collector.draw}')
+        logger.info(f'Player{collector.id} wins_ratio: {collector.wins_str}')
+        logger.info(f'Player{collector.id} lose_ratio: {collector.lose_str}')
+        logger.info(f'Player{collector.id} draw_ratio: {collector.draw_str}')
+        logger.info('-'*20)
+    logger.info('='*20)
+
 
 
 if __name__ == '__main__':
@@ -177,3 +251,5 @@ if __name__ == '__main__':
     # test_7_cards()
     # test_3_players()
     test_2_shareds()
+    # test_52_cards()
+    
